@@ -1,12 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 * {
   margin: 0;
   padding: 0;
 }
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
@@ -18,4 +20,128 @@ html {
 body {
   background-image: url("./images/background.png");
   background-repeat: repeat;
+}
+
+/* Home */
+.container-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-home h1 {
+  margin-top: 100px;
+  margin-bottom: 60px;
+  width: 308px;
+  color: #009048;
+  font-family: "Kanit", serif;
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 70px;
+}
+.container-home h1 span {
+  color: #91ccaf;
+}
+@media (min-width: 1280px) {
+  .container-home h1 {
+    margin-top: 130px;
+  }
+}
+
+.container-home .hands {
+  position: fixed;
+  bottom: -80px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+}
+
+/* Play */
+.container-play {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-play h1 {
+  margin-top: 100px;
+  margin-bottom: 30px;
+  width: 308px;
+  color: #000000;
+  font-family: "Kanit", serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 2.5rem;
+  text-align: center;
+}
+.container-play h1 span {
+  color: #91ccaf;
+}
+@media (min-width: 1280px) {
+  .container-play h1 {
+    margin-top: 130px;
+  }
+}
+
+.container-play .hands {
+  position: fixed;
+  bottom: -80px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+}
+
+/* Playing */
+.playing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playing-container .hand-opponent {
+  position: fixed;
+  top: -350px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+  transform: rotate(180deg);
+}
+
+.playing-container .hands {
+  position: fixed;
+  bottom: -80px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+}
+
+.result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #00000081;
+  display: none;
+}
+
+.result-modal__active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
 }
