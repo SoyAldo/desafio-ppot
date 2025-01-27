@@ -2,6 +2,8 @@ import { getHome } from "./pages/home";
 import { getPlay } from "./pages/play";
 import { getPlayingPage } from "./pages/playing";
 
+const basePath = "/desafio-ppot";
+
 // Interfas de ruta
 interface Route {
   path: RegExp;
@@ -24,9 +26,8 @@ const routes: Route[] = [
   },
 ];
 
-function getCleanPathName(): string {
-  const basePath = "/desafio-ppot";
-  const fullPath = location.pathname;
+function getCleanPathName(path: string): string {
+  const fullPath = path;
 
   if (fullPath.startsWith(basePath)) {
     const replacedPath = fullPath.replace(basePath, "");
@@ -40,23 +41,26 @@ function getCleanPathName(): string {
   }
 }
 
+function getRealPathName(path: string): string {
+  return basePath + path;
+}
+
 // Función que inicializa el componente de rutas
 function initRouter(container: Element) {
-  const path = getCleanPathName();
-
   function goTo(path: string) {
     // Realizo el cambio en el historial para actualizar el path en la url del navegador
-    history.pushState({}, "", path);
+    history.pushState({}, "", getRealPathName(path));
     // Llamo al handleRoute para que realice el cambio del contenido
     handleRoute(path);
   }
 
   function handleRoute(route: string) {
+    const cleanPathName = getCleanPathName(route);
     let foundedRoute;
     // Itero en las rutas para ver si alguna coincide con la ruta recibida
     for (const routeFromRoutes of routes) {
       // Si el la ruta coincide
-      if (routeFromRoutes.path.test(route)) {
+      if (routeFromRoutes.path.test(cleanPathName)) {
         // Obtengo el componente de la ruta
         foundedRoute = routeFromRoutes.getComponent({ goTo: goTo });
         // Freno la iteración
@@ -77,7 +81,7 @@ function initRouter(container: Element) {
   }
 
   // Llamo al handleRoute por primera vez
-  handleRoute(path);
+  handleRoute(location.pathname);
 }
 
 export { initRouter };
