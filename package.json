@@ -1,0 +1,19 @@
+{
+  "name": "desafio-ppot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "source": "src/index.html",
+  "scripts": {
+    "dev": "parcel",
+    "build": "parcel build",
+    "deploy": "gh-pages -d ./dist",
+    "build-and-deploy": "npm run build && npm run deploy"
+  },
+  "devDependencies": {
+    "@parcel/packager-raw-url": "2.13.3",
+    "@parcel/transformer-webmanifest": "2.13.3",
+    "parcel": "^2.13.3",
+    "gh-pages": "^6.3.0"
+  }
+}

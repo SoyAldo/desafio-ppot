@@ -1,0 +1,49 @@
+.playing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playing-container .hand-opponent {
+  position: fixed;
+  top: -350px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+  transform: rotate(180deg);
+}
+
+.playing-container .hands {
+  position: fixed;
+  bottom: -80px;
+  margin-top: 86px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: end;
+}
+
+.result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #00000081;
+  display: none;
+}
+
+.result-modal__active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+}
