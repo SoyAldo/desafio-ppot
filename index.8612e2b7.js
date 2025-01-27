@@ -1,5 +1,3 @@
-import "./index.a5ad8ca0.css";
-
 
 function $parcel$interopDefault(a) {
   return a && a.__esModule ? a.default : a;
@@ -750,7 +748,6 @@ function $10b9c74a44a6ee6f$export$525ad9e44225a0cd() {
 }
 
 
-
 function $164f4f3e4dbe12b4$export$bb1ac3c63ee0edba({ goTo: goTo }) {
     const container = document.createElement("div");
     // Agrego la clase al contenedor
@@ -772,7 +769,6 @@ function $164f4f3e4dbe12b4$export$bb1ac3c63ee0edba({ goTo: goTo }) {
     // Devuelvo el contenedor
     return container;
 }
-
 
 
 function $5420eb1e522c4ecd$export$ed9ce0b27ba2f412({ goTo: goTo }) {
@@ -797,7 +793,6 @@ function $5420eb1e522c4ecd$export$ed9ce0b27ba2f412({ goTo: goTo }) {
     // Devuelvo el contenedor
     return container;
 }
-
 
 
 
@@ -976,4 +971,4 @@ function $d7cc58dce5eb1bb0$var$main() {
 $d7cc58dce5eb1bb0$var$main();
 
 
-//# sourceMappingURL=index.6cfd848b.js.map
+//# sourceMappingURL=index.8612e2b7.js.map
