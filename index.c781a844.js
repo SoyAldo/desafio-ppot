@@ -891,6 +891,7 @@ function $636c0f7e7b3bd97f$var$showModal(modal) {
 }
 
 
+const $60311f4dbdf661c8$var$basePath = "/desafio-ppot";
 // Rutas disponibles
 const $60311f4dbdf661c8$var$routes = [
     {
@@ -906,18 +907,16 @@ const $60311f4dbdf661c8$var$routes = [
         getComponent: (0, $636c0f7e7b3bd97f$export$b60a175db2594d35)
     }
 ];
-function $60311f4dbdf661c8$var$getCleanPathName() {
-    const basePath = "/desafio-ppot";
+function $60311f4dbdf661c8$var$getCleanPathName(path) {
     const fullPath = location.pathname;
-    if (fullPath.startsWith(basePath)) {
-        const replacedPath = fullPath.replace(basePath, "");
+    if (fullPath.startsWith($60311f4dbdf661c8$var$basePath)) {
+        const replacedPath = fullPath.replace($60311f4dbdf661c8$var$basePath, "");
         if (replacedPath == "") return "/";
         else return replacedPath;
     } else return fullPath;
 }
 // Función que inicializa el componente de rutas
 function $60311f4dbdf661c8$export$cf7ee87ede64229c(container) {
-    const path = $60311f4dbdf661c8$var$getCleanPathName();
     function goTo(path) {
         // Realizo el cambio en el historial para actualizar el path en la url del navegador
         history.pushState({}, "", path);
@@ -925,10 +924,11 @@ function $60311f4dbdf661c8$export$cf7ee87ede64229c(container) {
         handleRoute(path);
     }
     function handleRoute(route) {
+        const cleanPathName = $60311f4dbdf661c8$var$getCleanPathName(route);
         let foundedRoute;
         // Itero en las rutas para ver si alguna coincide con la ruta recibida
         for (const routeFromRoutes of $60311f4dbdf661c8$var$routes)// Si el la ruta coincide
-        if (routeFromRoutes.path.test(route)) {
+        if (routeFromRoutes.path.test(cleanPathName)) {
             // Obtengo el componente de la ruta
             foundedRoute = routeFromRoutes.getComponent({
                 goTo: goTo
@@ -946,7 +946,7 @@ function $60311f4dbdf661c8$export$cf7ee87ede64229c(container) {
         container.appendChild(foundedRoute);
     }
     // Llamo al handleRoute por primera vez
-    handleRoute(path);
+    handleRoute(location.pathname);
 }
 
 
@@ -971,4 +971,4 @@ function $d7cc58dce5eb1bb0$var$main() {
 $d7cc58dce5eb1bb0$var$main();
 
 
-//# sourceMappingURL=index.8612e2b7.js.map
+//# sourceMappingURL=index.c781a844.js.map
