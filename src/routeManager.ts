@@ -24,8 +24,26 @@ const routes: Route[] = [
   },
 ];
 
+function getCleanPathName(): string {
+  const basePath = "/desafio-ppot";
+  const fullPath = location.pathname;
+
+  if (fullPath.startsWith(basePath)) {
+    const replacedPath = fullPath.replace(basePath, "");
+    if (replacedPath == "") {
+      return "/";
+    } else {
+      return replacedPath;
+    }
+  } else {
+    return fullPath;
+  }
+}
+
 // Función que inicializa el componente de rutas
 function initRouter(container: Element) {
+  const path = getCleanPathName();
+
   function goTo(path: string) {
     // Realizo el cambio en el historial para actualizar el path en la url del navegador
     history.pushState({}, "", path);
@@ -59,7 +77,7 @@ function initRouter(container: Element) {
   }
 
   // Llamo al handleRoute por primera vez
-  handleRoute(location.pathname);
+  handleRoute(path);
 }
 
 export { initRouter };
