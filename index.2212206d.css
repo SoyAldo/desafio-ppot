@@ -1,0 +1,127 @@
+@import "https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
+.container-home {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.container-home h1 {
+  color: #009048;
+  width: 308px;
+  margin-top: 100px;
+  margin-bottom: 60px;
+  font-family: Kanit, serif;
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 70px;
+}
+
+.container-home h1 span {
+  color: #91ccaf;
+}
+
+@media (width >= 1280px) {
+  .container-home h1 {
+    margin-top: 130px;
+  }
+}
+
+.container-home .hands {
+  justify-content: center;
+  align-items: end;
+  gap: 15px;
+  margin-top: 86px;
+  display: flex;
+  position: fixed;
+  bottom: -80px;
+}
+
+.container-play {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.container-play h1 {
+  color: #000;
+  text-align: center;
+  width: 308px;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  font-family: Kanit, serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 2.5rem;
+}
+
+.container-play h1 span {
+  color: #91ccaf;
+}
+
+@media (width >= 1280px) {
+  .container-play h1 {
+    margin-top: 130px;
+  }
+}
+
+.container-play .hands {
+  justify-content: center;
+  align-items: end;
+  gap: 15px;
+  margin-top: 86px;
+  display: flex;
+  position: fixed;
+  bottom: -80px;
+}
+
+.playing-container {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.playing-container .hand-opponent {
+  justify-content: center;
+  align-items: end;
+  gap: 15px;
+  margin-top: 86px;
+  display: flex;
+  position: fixed;
+  top: -350px;
+  transform: rotate(180deg);
+}
+
+.playing-container .hands {
+  justify-content: center;
+  align-items: end;
+  gap: 15px;
+  margin-top: 86px;
+  display: flex;
+  position: fixed;
+  bottom: -80px;
+}
+
+.result-modal {
+  background-color: #00000081;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.result-modal__active {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  display: flex;
+}
+
+.button {
+  justify-content: center;
+  display: flex;
+}
+/*# sourceMappingURL=index.2212206d.css.map */
