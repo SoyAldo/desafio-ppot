@@ -624,89 +624,79 @@ function main() {
 }
 main();
 
-},{"./routeManager":"k7IYA","./components/blueButtonComponent":"3yDPk","./stateManager":"dXYp2","./components/paperHandComponent":"hEjuK","./components/resultInformationComponent":"5s0Sh","./components/resultStarComponent":"1CqXt","./components/rockHandComponent":"5nsPr","./components/shearsHandComponent":"8CpFz","./components/counterComponent":"cRZ1N"}],"k7IYA":[function(require,module,exports,__globalThis) {
+},{"./components/blueButtonComponent":"3yDPk","./components/counterComponent":"cRZ1N","./components/paperHandComponent":"hEjuK","./components/resultInformationComponent":"5s0Sh","./components/resultStarComponent":"1CqXt","./components/rockHandComponent":"5nsPr","./components/shearsHandComponent":"8CpFz","./routeManager":"k7IYA","./stateManager":"dXYp2"}],"3yDPk":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "initRouter", ()=>initRouter);
-var _home = require("./pages/home");
-var _play = require("./pages/play");
-var _playing = require("./pages/playing");
-// Rutas disponibles
-const routes = [
-    {
-        path: /^\/$/,
-        getComponent: (0, _home.getHome)
-    },
-    {
-        path: /^\/play$/,
-        getComponent: (0, _play.getPlay)
-    },
-    {
-        path: /^\/playing$/,
-        getComponent: (0, _playing.getPlayingPage)
+parcelHelpers.export(exports, "registerBlueButton", ()=>registerBlueButton);
+class BlueButton extends HTMLElement {
+    constructor(){
+        super();
     }
-];
-// Función que inicializa el componente de rutas
-function initRouter(container) {
-    function goTo(path) {
-        // Realizo el cambio en el historial para actualizar el path en la url del navegador
-        history.pushState({}, "", path);
-        // Llamo al handleRoute para que realice el cambio del contenido
-        handleRoute(path);
-    }
-    function handleRoute(route) {
-        let foundedRoute;
-        // Itero en las rutas para ver si alguna coincide con la ruta recibida
-        for (const routeFromRoutes of routes)// Si el la ruta coincide
-        if (routeFromRoutes.path.test(route)) {
-            // Obtengo el componente de la ruta
-            foundedRoute = routeFromRoutes.getComponent({
-                goTo: goTo
-            });
-            break;
-        }
-        // Si se encontro la ruta
-        if (!foundedRoute) foundedRoute = (0, _home.getHome)({
-            goTo
+    render() {
+        const shadow = this.attachShadow({
+            mode: "open"
         });
-        // Verifico si el contenedor contiene algún elemento
-        if (container.firstChild) // Elimino el primer elemento del contenedor
-        container.firstChild.remove();
-        // Agrego el componente al contenedor
-        container.appendChild(foundedRoute);
+        const style = document.createElement("style");
+        style.textContent = `
+      .start-button {
+        width: 322px;
+        padding: 8px 0;
+        background-color: #006CFC;
+        border: solid 10px #001997;
+        border-radius: 10px;
+        color: #D8FCFC;
+        font-family: "Odibee Sans", sans-serif;
+        font-size: 3.5rem;
+        font-weight: 400;
+        letter-spacing: 5%;
+        text-align: center;
+        transition-property: "hover";
+        transition-duration: 0.3s;
+      }
+      .start-button:hover {
+        background-color: #398fff;
+        border: solid 5px #1836cc;
+      }
+      @media (min-width: 1280px) {
+        .start-button {
+          width: 336px;
+        }
+      }
+    `;
+        const buttonElement = document.createElement("button");
+        buttonElement.setAttribute("type", "button");
+        buttonElement.setAttribute("title", "button");
+        buttonElement.classList.add("start-button");
+        // Agregando el texto
+        if (this.childNodes.length > 0) {
+            // Obtengo el elemento de texto
+            const textElement = this.childNodes[0];
+            // Establezco el contenido de texto del elemento de texto al botónS
+            buttonElement.textContent = textElement.textContent;
+            // Eliminamos el textElement
+            textElement.remove();
+        }
+        // Emitiendo un evento
+        buttonElement.onclick = ()=>{
+            const blueButtonPressed = new CustomEvent("bluebuttonpressed", {
+                bubbles: true,
+                composed: true
+            });
+            this.dispatchEvent(blueButtonPressed);
+        };
+        // Agregando elementos al shadow
+        shadow.appendChild(style);
+        shadow.appendChild(buttonElement);
     }
-    // Llamo al handleRoute por primera vez
-    handleRoute(location.pathname);
+    connectedCallback() {
+        this.render();
+    }
+}
+function registerBlueButton() {
+    customElements.define("blue-button", BlueButton);
 }
 
-},{"./pages/home":"l5Ogl","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./pages/play":"hbEIY","./pages/playing":"dnrJt"}],"l5Ogl":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getHome", ()=>getHome);
-var _homeCss = require("./home.css");
-function getHome({ goTo }) {
-    const container = document.createElement("div");
-    // Agrego la clase al contenedor
-    container.classList.add("container-home");
-    // Agrego el contenido al contenedor
-    container.innerHTML = ` 
-    <h1 class="title">Piedra Papel <span>\xf3</span> Tijera</h1>
-
-    <blue-button>Empezar</blue-button>
-
-    <div class="hands">
-      <shears-hand dummy></shears-hand>
-      <rock-hand dummy></rock-hand>
-      <paper-hand dummy></paper-hand>
-    </div>
-  `;
-    // Escuchando cuando el botón es presionado
-    container.addEventListener("bluebuttonpressed", ()=>goTo("/play"));
-    // Devuelvo el contenedor
-    return container;
-}
-
-},{"./home.css":"9Z9Ej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9Z9Ej":[function() {},{}],"gkKU3":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports,__globalThis) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -736,103 +726,170 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"hbEIY":[function(require,module,exports,__globalThis) {
+},{}],"cRZ1N":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getPlay", ()=>getPlay);
-var _playCss = require("./play.css");
-function getPlay({ goTo }) {
-    const container = document.createElement("div");
-    container.classList.add("container-play");
-    container.innerHTML = `
-    <h1 class="title">Presion\xe1 jugar y eleg\xed: piedra, papel o tijera antes de que pasen los 3 segundos.</h1>
+parcelHelpers.export(exports, "registerCounterBlack", ()=>registerCounterBlack);
+class CounterBlack extends HTMLElement {
+    constructor(){
+        super(), this.counter = 3;
+    }
+    render() {
+        const shadow = this.attachShadow({
+            mode: "open"
+        });
+        // Elemento de estilos
+        const style = document.createElement("style");
+        style.textContent = `
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .counter {
+      width: 300px;
+      height: 300px;
+      border: 23px solid #000000;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 5rem;
+      margin-top: 120px;
 
-    <blue-button>\xa1Jugar!</blue-button>
-
-    <div class="hands">
-      <shears-hand dummy></shears-hand>
-      <rock-hand dummy></rock-hand>
-      <paper-hand dummy></paper-hand>
-    </div>
-  `;
-    // Escuchando cuando el botón es presionado
-    container.addEventListener("bluebuttonpressed", ()=>{
-        // Voy a la página de jugando
-        goTo("/playing");
-    });
-    // Devuelvo el contenedor
-    return container;
-}
-
-},{"./play.css":"jrTjw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jrTjw":[function() {},{}],"dnrJt":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getPlayingPage", ()=>getPlayingPage);
-var _playingCss = require("./playing.css");
-var _stateManager = require("../../stateManager");
-var _util = require("../../util");
-function getPlayingPage({ goTo }) {
-    const containerEl = document.createElement("div");
-    containerEl.classList.add("playing-container");
-    containerEl.innerHTML = `
-    <counter-black name="main-counter" removeOnEnd></counter-black>
-    <div class="hand-opponent">
-      <shears-hand dummy opponent></shears-hand>
-      <rock-hand dummy opponent></rock-hand>
-      <paper-hand dummy opponent></paper-hand>
-    </div>
-    <div class="hands">
-      <shears-hand></shears-hand>
-      <rock-hand></rock-hand>
-      <paper-hand></paper-hand>
-    </div>
-    <div class="result-modal">
-      <result-star></result-star>
-      <result-information></result-information>
-      <div class="button">
-        <blue-button>Volver a Jugar</blue-button>
-      </div>
-    </div>
-  `;
-    const modalEl = containerEl.querySelector(".result-modal");
-    // Escuchar el evento del botón
-    modalEl.addEventListener("bluebuttonpressed", ()=>{
-        // Limpiar resultados
-        (0, _stateManager.clearGame)();
-        // Volver al inicio
-        goTo("/");
-    });
-    // Escucho el evento de finalización del contador
-    containerEl.addEventListener("counterended", ()=>{
-        // Elegir de forma aleatoría la elección del oponente
-        (0, _stateManager.setOpponentChose)((0, _util.getRandomChose)());
-        // Obtener el resultado
-        const result = (0, _util.hasPlayerWin)((0, _stateManager.getPlayerChose)(), (0, _stateManager.getOpponentChose)());
-        // Incrementamos las estadísticas dependiendo del resultado
-        if (result == "win") {
-            (0, _stateManager.increaseWins)();
-            (0, _stateManager.setGameResult)("win");
-        } else if (result == "lose") {
-            (0, _stateManager.increaseLosses)();
-            (0, _stateManager.setGameResult)("lose");
-        } else (0, _stateManager.setGameResult)("tie");
-        (0, _stateManager.setGameStage)("finishing");
-        // Mostrar el modal despues de 3 segundos
-        setTimeout(()=>{
-            showModal(modalEl);
-            (0, _stateManager.setGameStage)("finished");
+      font-family: "Kanit", sans-serif;
+      font-size: 8rem;
+      font-weight: 700;
+    }
+    `;
+        // Elemento de texto
+        const text = document.createElement("p");
+        text.className = "counter";
+        text.textContent = this.counter + "";
+        // Agregando elementos al shadow dom
+        shadow.appendChild(style);
+        shadow.appendChild(text);
+        // Emitir evento al finalizar el contador
+        let intervalId = setInterval(()=>{
+            // Disminuyo el contador
+            this.counter--;
+            // Actualizo el contador
+            text.textContent = this.counter + "";
+            // Si el contador es igual a 0
+            if (this.counter == 0) {
+                // Emitir evento al finalizar el contador
+                const counterEndedEvent = new CustomEvent("counterended", {
+                    detail: {
+                        name: this.name
+                    },
+                    bubbles: true
+                });
+                this.dispatchEvent(counterEndedEvent);
+                // Eliminar el contador si se debe eliminar al finalizar
+                if (this.removeOnEnd) this.remove();
+                // Parar el intervalo
+                clearInterval(intervalId);
+            }
         }, 1000);
-    });
-    // Cambiar el estado del juego a seleccionando
-    (0, _stateManager.setGameStage)("selecting");
-    // Devuelvo el contenedor
-    return containerEl;
+    }
+    connectedCallback() {
+        this.name = this.getAttribute("name");
+        this.removeOnEnd = this.hasAttribute("removeOnEnd");
+        this.render();
+    }
 }
-function showModal(modal) {
-    modal.className = "result-modal result-modal__active";
+function registerCounterBlack() {
+    customElements.define("counter-black", CounterBlack);
 }
 
-},{"../../stateManager":"dXYp2","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./playing.css":"laglX","../../util":"j2NOL"}],"dXYp2":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hEjuK":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "registerPaperHand", ()=>registerPaperHand);
+var _stateManager = require("../../stateManager");
+var _paperSvg = require("../../images/paper.svg");
+var _paperSvgDefault = parcelHelpers.interopDefault(_paperSvg);
+class PaperHand extends HTMLElement {
+    constructor(){
+        super(), this.type = "paper";
+    }
+    render() {
+        const shadow = this.attachShadow({
+            mode: "open"
+        });
+        const style = document.createElement("style");
+        style.textContent = `
+    .hand {
+      transform: translate(0, 0);
+      transition: transform 0.6s ease;
+    }
+    .hand__active {
+      transform: translate(0, -50px);
+    }
+    .hand__inactive { 
+      transform: translate(0, 40px);
+      opacity: 0.5;
+    }
+    .hand__selected {
+      transform: translate(-85%, -90px) scale(1.5);
+    }
+    .hand__no-selected {
+      transform: translate(0, 256px);
+    }
+    .hand__selected-opponent {
+      transform: translate(-85%, -285px) scale(1.5);
+    }
+    `;
+        // Elemento del contenedor
+        const container = document.createElement("img");
+        container.className = "hand";
+        container.src = (0, _paperSvgDefault.default);
+        // Evento al hacer clic en la mano
+        container.addEventListener("click", ()=>{
+            // Si la mano no es un muñeco no hacer nada
+            if (!this.dummy) // Cuando hacen clic cambio la selección del jugador
+            (0, _stateManager.setPlayerChose)(this.type);
+        });
+        // Oyente al cambio del estado
+        (0, _stateManager.addListener)({
+            id: this.opponent ? this.type + "-hand-opponent" : this.type + "-hand",
+            function: (state)=>{
+                const gameStage = state.game.stage;
+                if (this.opponent) {
+                    if (gameStage == "finishing") {
+                        const opponentChose = state.hand.opponent;
+                        if (opponentChose == this.type) container.className = "hand hand__selected-opponent";
+                    }
+                }
+                // Si la mano es un muñeco no hacer nada
+                if (!this.dummy) {
+                    const playerChose = state.hand.player;
+                    if (gameStage == "selecting") {
+                        if (playerChose) {
+                            if (playerChose == this.type) container.className = "hand hand__active";
+                            else container.className = "hand hand__inactive";
+                        } else container.className = "hand";
+                    } else if (gameStage == "finishing") {
+                        if (playerChose == this.type) container.className = "hand hand__selected";
+                        else container.className = "hand hand__no-selected";
+                    }
+                }
+            }
+        });
+        // Agregando elementos al shadow dom
+        shadow.appendChild(style);
+        shadow.appendChild(container);
+    }
+    connectedCallback() {
+        this.dummy = this.hasAttribute("dummy");
+        this.opponent = this.hasAttribute("opponent");
+        this.render();
+    }
+}
+function registerPaperHand() {
+    customElements.define("paper-hand", PaperHand);
+}
+
+},{"../../stateManager":"dXYp2","../../images/paper.svg":"3elHx","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXYp2":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "initState", ()=>initState);
@@ -996,204 +1053,7 @@ function setGameStage(newStage) {
     });
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"laglX":[function() {},{}],"j2NOL":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "hasPlayerWin", ()=>hasPlayerWin);
-parcelHelpers.export(exports, "getRandomChose", ()=>getRandomChose);
-function getRandomChose() {
-    // Posibles opciones
-    const optionsOrdinal = {
-        0: "rock",
-        1: "paper",
-        2: "shears"
-    };
-    // Obtengo un número aleatorio del 0 al 2
-    const randomOrdinal = Math.floor(Math.random() * 3);
-    // Devuelvo una selección acorde al número
-    return optionsOrdinal[randomOrdinal];
-}
-function hasPlayerWin(playerChose, opponentChose) {
-    // Posibles combinaciones
-    const combinations = {
-        rockrock: "tie",
-        rockpaper: "lose",
-        rockshears: "win",
-        paperrock: "win",
-        paperpaper: "tie",
-        papershears: "lose",
-        shearsrock: "lose",
-        shearspaper: "win",
-        shearsshears: "tie"
-    };
-    // Si ambas selecciones son validas
-    if (playerChose && opponentChose) // Retorno el resultado correspondiente para ambas selecciones
-    return combinations[playerChose + opponentChose];
-    else // De lo contrario devuelvo que perdio
-    return "lose";
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3yDPk":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "registerBlueButton", ()=>registerBlueButton);
-class BlueButton extends HTMLElement {
-    constructor(){
-        super();
-    }
-    render() {
-        const shadow = this.attachShadow({
-            mode: "open"
-        });
-        const style = document.createElement("style");
-        style.textContent = `
-      .start-button {
-        width: 322px;
-        padding: 8px 0;
-        background-color: #006CFC;
-        border: solid 10px #001997;
-        border-radius: 10px;
-        color: #D8FCFC;
-        font-family: "Odibee Sans", sans-serif;
-        font-size: 3.5rem;
-        font-weight: 400;
-        letter-spacing: 5%;
-        text-align: center;
-        transition-property: "hover";
-        transition-duration: 0.3s;
-      }
-      .start-button:hover {
-        background-color: #398fff;
-        border: solid 5px #1836cc;
-      }
-      @media (min-width: 1280px) {
-        .start-button {
-          width: 336px;
-        }
-      }
-    `;
-        const buttonElement = document.createElement("button");
-        buttonElement.setAttribute("type", "button");
-        buttonElement.setAttribute("title", "button");
-        buttonElement.classList.add("start-button");
-        // Agregando el texto
-        if (this.childNodes.length > 0) {
-            // Obtengo el elemento de texto
-            const textElement = this.childNodes[0];
-            // Establezco el contenido de texto del elemento de texto al botónS
-            buttonElement.textContent = textElement.textContent;
-            // Eliminamos el textElement
-            textElement.remove();
-        }
-        // Emitiendo un evento
-        buttonElement.onclick = ()=>{
-            const blueButtonPressed = new CustomEvent("bluebuttonpressed", {
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(blueButtonPressed);
-        };
-        // Agregando elementos al shadow
-        shadow.appendChild(style);
-        shadow.appendChild(buttonElement);
-    }
-    connectedCallback() {
-        this.render();
-    }
-}
-function registerBlueButton() {
-    customElements.define("blue-button", BlueButton);
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hEjuK":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "registerPaperHand", ()=>registerPaperHand);
-var _stateManager = require("../../stateManager");
-var _paperSvg = require("../../images/paper.svg");
-var _paperSvgDefault = parcelHelpers.interopDefault(_paperSvg);
-class PaperHand extends HTMLElement {
-    constructor(){
-        super(), this.type = "paper";
-    }
-    render() {
-        const shadow = this.attachShadow({
-            mode: "open"
-        });
-        const style = document.createElement("style");
-        style.textContent = `
-    .hand {
-      transform: translate(0, 0);
-      transition: transform 0.6s ease;
-    }
-    .hand__active {
-      transform: translate(0, -50px);
-    }
-    .hand__inactive { 
-      transform: translate(0, 40px);
-      opacity: 0.5;
-    }
-    .hand__selected {
-      transform: translate(-85%, -90px) scale(1.5);
-    }
-    .hand__no-selected {
-      transform: translate(0, 256px);
-    }
-    .hand__selected-opponent {
-      transform: translate(-85%, -285px) scale(1.5);
-    }
-    `;
-        // Elemento del contenedor
-        const container = document.createElement("img");
-        container.className = "hand";
-        container.src = (0, _paperSvgDefault.default);
-        // Evento al hacer clic en la mano
-        container.addEventListener("click", ()=>{
-            // Si la mano no es un muñeco no hacer nada
-            if (!this.dummy) // Cuando hacen clic cambio la selección del jugador
-            (0, _stateManager.setPlayerChose)(this.type);
-        });
-        // Oyente al cambio del estado
-        (0, _stateManager.addListener)({
-            id: this.opponent ? this.type + "-hand-opponent" : this.type + "-hand",
-            function: (state)=>{
-                const gameStage = state.game.stage;
-                if (this.opponent) {
-                    if (gameStage == "finishing") {
-                        const opponentChose = state.hand.opponent;
-                        if (opponentChose == this.type) container.className = "hand hand__selected-opponent";
-                    }
-                }
-                // Si la mano es un muñeco no hacer nada
-                if (!this.dummy) {
-                    const playerChose = state.hand.player;
-                    if (gameStage == "selecting") {
-                        if (playerChose) {
-                            if (playerChose == this.type) container.className = "hand hand__active";
-                            else container.className = "hand hand__inactive";
-                        } else container.className = "hand";
-                    } else if (gameStage == "finishing") {
-                        if (playerChose == this.type) container.className = "hand hand__selected";
-                        else container.className = "hand hand__no-selected";
-                    }
-                }
-            }
-        });
-        // Agregando elementos al shadow dom
-        shadow.appendChild(style);
-        shadow.appendChild(container);
-    }
-    connectedCallback() {
-        this.dummy = this.hasAttribute("dummy");
-        this.opponent = this.hasAttribute("opponent");
-        this.render();
-    }
-}
-function registerPaperHand() {
-    customElements.define("paper-hand", PaperHand);
-}
-
-},{"../../stateManager":"dXYp2","../../images/paper.svg":"3elHx","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3elHx":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3elHx":[function(require,module,exports,__globalThis) {
 module.exports = require("177feddc0d7a68ab").getBundleURL('171qT') + "paper.1a02f93b.svg" + "?" + Date.now();
 
 },{"177feddc0d7a68ab":"lgJ39"}],"lgJ39":[function(require,module,exports,__globalThis) {
@@ -1619,79 +1479,229 @@ function registerShearsHand() {
 },{"../../stateManager":"dXYp2","../../images/shears.svg":"c27K0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"c27K0":[function(require,module,exports,__globalThis) {
 module.exports = require("b1ad9085c743f8e7").getBundleURL('171qT') + "shears.3b7d0121.svg" + "?" + Date.now();
 
-},{"b1ad9085c743f8e7":"lgJ39"}],"cRZ1N":[function(require,module,exports,__globalThis) {
+},{"b1ad9085c743f8e7":"lgJ39"}],"k7IYA":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "registerCounterBlack", ()=>registerCounterBlack);
-class CounterBlack extends HTMLElement {
-    constructor(){
-        super(), this.counter = 3;
+parcelHelpers.export(exports, "initRouter", ()=>initRouter);
+var _home = require("./pages/home");
+var _play = require("./pages/play");
+var _playing = require("./pages/playing");
+// Rutas disponibles
+const routes = [
+    {
+        path: /^\/$/,
+        getComponent: (0, _home.getHome)
+    },
+    {
+        path: /^\/play$/,
+        getComponent: (0, _play.getPlay)
+    },
+    {
+        path: /^\/playing$/,
+        getComponent: (0, _playing.getPlayingPage)
     }
-    render() {
-        const shadow = this.attachShadow({
-            mode: "open"
-        });
-        // Elemento de estilos
-        const style = document.createElement("style");
-        style.textContent = `
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    .counter {
-      width: 300px;
-      height: 300px;
-      border: 23px solid #000000;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 5rem;
-      margin-top: 120px;
-
-      font-family: "Kanit", sans-serif;
-      font-size: 8rem;
-      font-weight: 700;
-    }
-    `;
-        // Elemento de texto
-        const text = document.createElement("p");
-        text.className = "counter";
-        text.textContent = this.counter + "";
-        // Agregando elementos al shadow dom
-        shadow.appendChild(style);
-        shadow.appendChild(text);
-        // Emitir evento al finalizar el contador
-        let intervalId = setInterval(()=>{
-            // Disminuyo el contador
-            this.counter--;
-            // Actualizo el contador
-            text.textContent = this.counter + "";
-            // Si el contador es igual a 0
-            if (this.counter == 0) {
-                // Emitir evento al finalizar el contador
-                const counterEndedEvent = new CustomEvent("counterended", {
-                    detail: {
-                        name: this.name
-                    },
-                    bubbles: true
-                });
-                this.dispatchEvent(counterEndedEvent);
-                // Eliminar el contador si se debe eliminar al finalizar
-                if (this.removeOnEnd) this.remove();
-                // Parar el intervalo
-                clearInterval(intervalId);
-            }
-        }, 1000);
-    }
-    connectedCallback() {
-        this.name = this.getAttribute("name");
-        this.removeOnEnd = this.hasAttribute("removeOnEnd");
-        this.render();
-    }
+];
+function getCleanPathName() {
+    const basePath = "/desafio-ppot";
+    const fullPath = location.pathname;
+    if (fullPath.startsWith(basePath)) {
+        const replacedPath = fullPath.replace(basePath, "");
+        if (replacedPath == "") return "/";
+        else return replacedPath;
+    } else return fullPath;
 }
-function registerCounterBlack() {
-    customElements.define("counter-black", CounterBlack);
+// Función que inicializa el componente de rutas
+function initRouter(container) {
+    const path = getCleanPathName();
+    function goTo(path) {
+        // Realizo el cambio en el historial para actualizar el path en la url del navegador
+        history.pushState({}, "", path);
+        // Llamo al handleRoute para que realice el cambio del contenido
+        handleRoute(path);
+    }
+    function handleRoute(route) {
+        let foundedRoute;
+        // Itero en las rutas para ver si alguna coincide con la ruta recibida
+        for (const routeFromRoutes of routes)// Si el la ruta coincide
+        if (routeFromRoutes.path.test(route)) {
+            // Obtengo el componente de la ruta
+            foundedRoute = routeFromRoutes.getComponent({
+                goTo: goTo
+            });
+            break;
+        }
+        // Si se encontro la ruta
+        if (!foundedRoute) foundedRoute = (0, _home.getHome)({
+            goTo
+        });
+        // Verifico si el contenedor contiene algún elemento
+        if (container.firstChild) // Elimino el primer elemento del contenedor
+        container.firstChild.remove();
+        // Agrego el componente al contenedor
+        container.appendChild(foundedRoute);
+    }
+    // Llamo al handleRoute por primera vez
+    handleRoute(path);
+}
+
+},{"./pages/home":"l5Ogl","./pages/play":"hbEIY","./pages/playing":"dnrJt","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l5Ogl":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getHome", ()=>getHome);
+var _homeCss = require("./home.css");
+function getHome({ goTo }) {
+    const container = document.createElement("div");
+    // Agrego la clase al contenedor
+    container.classList.add("container-home");
+    // Agrego el contenido al contenedor
+    container.innerHTML = ` 
+    <h1 class="title">Piedra Papel <span>\xf3</span> Tijera</h1>
+
+    <blue-button>Empezar</blue-button>
+
+    <div class="hands">
+      <shears-hand dummy></shears-hand>
+      <rock-hand dummy></rock-hand>
+      <paper-hand dummy></paper-hand>
+    </div>
+  `;
+    // Escuchando cuando el botón es presionado
+    container.addEventListener("bluebuttonpressed", ()=>goTo("/play"));
+    // Devuelvo el contenedor
+    return container;
+}
+
+},{"./home.css":"9Z9Ej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9Z9Ej":[function() {},{}],"hbEIY":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getPlay", ()=>getPlay);
+var _playCss = require("./play.css");
+function getPlay({ goTo }) {
+    const container = document.createElement("div");
+    container.classList.add("container-play");
+    container.innerHTML = `
+    <h1 class="title">Presion\xe1 jugar y eleg\xed: piedra, papel o tijera antes de que pasen los 3 segundos.</h1>
+
+    <blue-button>\xa1Jugar!</blue-button>
+
+    <div class="hands">
+      <shears-hand dummy></shears-hand>
+      <rock-hand dummy></rock-hand>
+      <paper-hand dummy></paper-hand>
+    </div>
+  `;
+    // Escuchando cuando el botón es presionado
+    container.addEventListener("bluebuttonpressed", ()=>{
+        // Voy a la página de jugando
+        goTo("/playing");
+    });
+    // Devuelvo el contenedor
+    return container;
+}
+
+},{"./play.css":"jrTjw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jrTjw":[function() {},{}],"dnrJt":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getPlayingPage", ()=>getPlayingPage);
+var _playingCss = require("./playing.css");
+var _stateManager = require("../../stateManager");
+var _util = require("../../util");
+function getPlayingPage({ goTo }) {
+    const containerEl = document.createElement("div");
+    containerEl.classList.add("playing-container");
+    containerEl.innerHTML = `
+    <counter-black name="main-counter" removeOnEnd></counter-black>
+    <div class="hand-opponent">
+      <shears-hand dummy opponent></shears-hand>
+      <rock-hand dummy opponent></rock-hand>
+      <paper-hand dummy opponent></paper-hand>
+    </div>
+    <div class="hands">
+      <shears-hand></shears-hand>
+      <rock-hand></rock-hand>
+      <paper-hand></paper-hand>
+    </div>
+    <div class="result-modal">
+      <result-star></result-star>
+      <result-information></result-information>
+      <div class="button">
+        <blue-button>Volver a Jugar</blue-button>
+      </div>
+    </div>
+  `;
+    const modalEl = containerEl.querySelector(".result-modal");
+    // Escuchar el evento del botón
+    modalEl.addEventListener("bluebuttonpressed", ()=>{
+        // Limpiar resultados
+        (0, _stateManager.clearGame)();
+        // Volver al inicio
+        goTo("/");
+    });
+    // Escucho el evento de finalización del contador
+    containerEl.addEventListener("counterended", ()=>{
+        // Elegir de forma aleatoría la elección del oponente
+        (0, _stateManager.setOpponentChose)((0, _util.getRandomChose)());
+        // Obtener el resultado
+        const result = (0, _util.hasPlayerWin)((0, _stateManager.getPlayerChose)(), (0, _stateManager.getOpponentChose)());
+        // Incrementamos las estadísticas dependiendo del resultado
+        if (result == "win") {
+            (0, _stateManager.increaseWins)();
+            (0, _stateManager.setGameResult)("win");
+        } else if (result == "lose") {
+            (0, _stateManager.increaseLosses)();
+            (0, _stateManager.setGameResult)("lose");
+        } else (0, _stateManager.setGameResult)("tie");
+        (0, _stateManager.setGameStage)("finishing");
+        // Mostrar el modal despues de 3 segundos
+        setTimeout(()=>{
+            showModal(modalEl);
+            (0, _stateManager.setGameStage)("finished");
+        }, 1000);
+    });
+    // Cambiar el estado del juego a seleccionando
+    (0, _stateManager.setGameStage)("selecting");
+    // Devuelvo el contenedor
+    return containerEl;
+}
+function showModal(modal) {
+    modal.className = "result-modal result-modal__active";
+}
+
+},{"./playing.css":"laglX","../../stateManager":"dXYp2","../../util":"j2NOL","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"laglX":[function() {},{}],"j2NOL":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hasPlayerWin", ()=>hasPlayerWin);
+parcelHelpers.export(exports, "getRandomChose", ()=>getRandomChose);
+function getRandomChose() {
+    // Posibles opciones
+    const optionsOrdinal = {
+        0: "rock",
+        1: "paper",
+        2: "shears"
+    };
+    // Obtengo un número aleatorio del 0 al 2
+    const randomOrdinal = Math.floor(Math.random() * 3);
+    // Devuelvo una selección acorde al número
+    return optionsOrdinal[randomOrdinal];
+}
+function hasPlayerWin(playerChose, opponentChose) {
+    // Posibles combinaciones
+    const combinations = {
+        rockrock: "tie",
+        rockpaper: "lose",
+        rockshears: "win",
+        paperrock: "win",
+        paperpaper: "tie",
+        papershears: "lose",
+        shearsrock: "lose",
+        shearspaper: "win",
+        shearsshears: "tie"
+    };
+    // Si ambas selecciones son validas
+    if (playerChose && opponentChose) // Retorno el resultado correspondiente para ambas selecciones
+    return combinations[playerChose + opponentChose];
+    else // De lo contrario devuelvo que perdio
+    return "lose";
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["3sN7K","kuM8f"], "kuM8f", "parcelRequire94c2")
