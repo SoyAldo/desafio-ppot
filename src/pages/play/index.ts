@@ -1,5 +1,3 @@
-import "./play.css";
-
 function getPlay({ goTo }) {
   const container = document.createElement("div");
   container.classList.add("container-play");

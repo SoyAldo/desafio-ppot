@@ -1,4 +1,3 @@
-import "./playing.css";
 import {
   clearGame,
   getOpponentChose,

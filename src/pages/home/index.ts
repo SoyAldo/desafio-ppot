@@ -1,5 +1,3 @@
-import "./home.css";
-
 function getHome({ goTo }) {
   const container = document.createElement("div");
   // Agrego la clase al contenedor
